@@ -74,50 +74,71 @@
 </head>
 <body>
 
-<div align = "center">
-<h1>Welcome to the Star of the West Archive</h1>
+<div id="document-viewer"></div>
 
-<p>The Star of the West was a Bahá'í periodical which began publication on March 21, 1910 and ended publication under this title in March 1935.
-The periodical featured translations of some Tablets of 'Abdu'l-Bahá and writings from Shoghi Effendi along with sharing news of the Bahá'í world.
-The text was mostly in English, but also often offered a Persian language section with its own content.</p>
-<p><i>From Wikipedia, the free encyclopedia</i></p>
-
-<center> <img src = /images/local/starquote.gif> </center>
-
-<h2>Select the volume you would like to read or to search </h2>
-<form action="">
-	<div>
-    <select id="volumeSelect">
-      <% (1..25).to_a.each { |i| %>
-        <option value="Vol<%= "%02d" % i %>">Volume <%= i %>, 19<%= i+9 %> - 19<%= i+10 %></option>
-      <% } %>
-	</select>
-	<input type="button" id="buttonSelect" value="Select here" >
-	</div>
-</form>
-<h3>When you have finished with one volume, use your browser's back button to return to this page to select another volume. </h3>
-</div>
 <script type="text/javascript">
-
-// starting volume
-var current_volume = "Vol01";
-
-// once the page is fully loaded, run what's here:
-$(function(){
-  // on button click, run the following:
-  $("#buttonSelect").click(function(){
-    //get the value of the currently selected volume:
-    var vol =  $("#volumeSelect").val();
-	current_volume = vol;
-	// Go to the viewer page
-	// use the name of the window to pass the parameter
-	window.name = current_volume;
-	location.href = 'viewer.erb';
-	    })
-});
 // GLOBALS:
+// lets load sotw_config later...
 var sotw_config = {};
 
+// starting volume
+// use the name of the main window to get the parameter
+current_volume = top.window.name;
+
+// page counts for all volumes:
+var volumes = { "Vol01" : 384,
+				"Vol02" : 328,
+				"Vol03" : 382,
+				"Vol04" : 328,  
+				"Vol05" : 304,
+				"Vol06" : 168,
+				"Vol07" : 196,
+				"Vol08" : 244,
+				"Vol09" : 232,
+				"Vol10" : 356,
+				"Vol11" : 344,
+				"Vol12" : 320,
+				"Vol13" : 352,
+				"Vol14" : 384,
+				"Vol15" : 376,
+				"Vol16" : 384,
+				"Vol17" : 382,
+				"Vol18" : 394,
+				"Vol19" : 374,
+				"Vol20" : 390,
+				"Vol21" : 390,
+				"Vol22" : 390,
+				"Vol23" : 395,
+				"Vol24" : 390,
+				"Vol25" : 399
+};
+
+function reload_sotw_config() {
+  sotw_config = {
+    "title": "Star of the West: "+current_volume+" ",
+    "description": "",
+    "id": "sotw-v01",
+    "pages": volumes[current_volume],
+    "annotations": [],
+    "resources": {
+      "page": {
+          "image": "/"+current_volume+"/{size}/SOTW_"+current_volume+"_{page}.gif",
+          "text": "/"+current_volume+"/text/SOTW_"+current_volume+"_{page}.txt"		
+      },
+    "pdf": "/pdfs/SOTW_"+current_volume+".pdf",
+    "related_story": "http://www.google.com",
+    "search": "/search.json/"+current_volume+"/{query}"
+    },
+  "sections": []
+  };
+}
+// load sotw_config for the first time
+reload_sotw_config();
+//load the document viewer with the proper sotw_config
+ window.currentDocument = DV.load(
+   sotw_config,
+   {container: '#document-viewer'}
+ );
 </script>
 
 </body>
